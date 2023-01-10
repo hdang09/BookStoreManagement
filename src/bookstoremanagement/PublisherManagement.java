@@ -71,17 +71,17 @@ public class PublisherManagement {
     public static void saveToFile() {
         System.out.println(publisher);
         
-        try {
-            FileOutputStream fos = new FileOutputStream(new File(filePath));
+        try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
             ObjectOutputStream obj = new ObjectOutputStream(fos);
 
-            List<Publisher> publisherList = PublisherManagement.readFile();
-            for (Publisher pu: publisherList) {
+            List<Publisher> publisherListFild = PublisherManagement.readFile();
+            for (Publisher pu: publisherListFild) {
                 obj.writeObject(pu);
             }
             
             obj.writeObject(publisher);
             System.out.println("Write to file successfully");
+            fos.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PublisherManagement.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

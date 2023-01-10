@@ -142,6 +142,7 @@ public class BookManagement {
             ObjectOutputStream obj = new ObjectOutputStream(fos);
             obj.writeObject(book);
             System.out.println("Save to file successfuly");
+            fos.close();
         } catch (IOException ex) {
             System.out.println("Error while write to file");
         }
