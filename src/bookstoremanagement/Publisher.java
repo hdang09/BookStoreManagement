@@ -2,22 +2,28 @@ package bookstoremanagement;
 
 import java.io.Serializable;
 
-public class Publisher implements Serializable {
-    private int id;
+public class Publisher implements Serializable, Comparable<Publisher> {
+    private String id;
     private String name;
     private String phone;
 
-    public Publisher(int id, String name, String phone) {
+    public Publisher() {
+        this.id = "";
+        this.name = "";
+        this.phone = "";
+    }
+    
+    public Publisher(String id, String name, String phone) {
         this.id = id;
         this.name = name;
         this.phone = phone;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -40,6 +46,11 @@ public class Publisher implements Serializable {
     @Override
     public String toString() {
         return "Publisher{" + "id=" + id + ", name=" + name + ", phone=" + phone + '}';
+    }
+
+    @Override
+    public int compareTo(Publisher o) {
+        return this.name.compareTo(o.getName());
     }
     
     

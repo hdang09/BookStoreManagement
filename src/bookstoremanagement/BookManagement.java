@@ -16,26 +16,33 @@ public class BookManagement {
 
     static Scanner sc = new Scanner(System.in);
     static String filePath = "src\\Book.dat";
-    static List<Book> books = BookManagement.readFIle();
+    public static List<Book> books = BookManagement.readFIle();
     static Book book = null;
 
     public static void menu() {
-        System.err.println("2.1. Create a Book");
-        System.err.println("2.2. Search the Book");
-        System.err.println("2.3. Update a Book");
-        System.err.println("2.4. Delete the Book");
-        System.err.println("2.5. Save the Books list to file.");
-        System.err.println("2.6. Print the Books list from the file");
+        System.out.println("2.1. Create a Book");
+        System.out.println("2.2. Search the Book");
+        System.out.println("2.3. Update a Book");
+        System.out.println("2.4. Delete the Book");
+        System.out.println("2.5. Save the Books list to file.");
+        System.out.println("2.6. Print the Books list from the file");
 
         int choice = sc.nextInt();
         switch (choice) {
-            case 1 -> BookManagement.create();
-            case 2 -> BookManagement.search();
-            case 3 -> BookManagement.update();
-            case 4 -> BookManagement.delete();
-            case 5 -> BookManagement.create();
-            case 6 -> BookManagement.create();
-            default -> Main.menu();
+            case 1 ->
+                BookManagement.create();
+            case 2 ->
+                BookManagement.search();
+            case 3 ->
+                BookManagement.update();
+            case 4 ->
+                BookManagement.delete();
+            case 5 ->
+                BookManagement.create();
+            case 6 ->
+                BookManagement.create();
+            default ->
+                Main.menu();
         }
     }
 
@@ -55,10 +62,12 @@ public class BookManagement {
         book = new Book(id, name, price, quantity, publisherId, status);
 
         boolean isFound = false;
+        
         List<Publisher> publisherList = PublisherManagement.readFile();
         for (Publisher publisher : publisherList) {
-            if (publisher.getId() == publisherId) {
+            if (publisher.getId().equals(publisherId)) {
                 isFound = true;
+                break;
             }
         }
         if (isFound) {
@@ -151,33 +160,36 @@ public class BookManagement {
 
     public static List<Book> readFIle() {
         List<Book> booksFromFile = new ArrayList<>();
-        try {
-            FileInputStream fis = new FileInputStream(filePath);
+        try (FileInputStream fis = new FileInputStream(filePath)) {
             ObjectInputStream obj = new ObjectInputStream(fis);
 
             boolean hasNext = true;
             while (hasNext) {
                 if (fis.available() != 0) {
-                    Book bookFromFile = (Book) obj.readObject();
-                    booksFromFile.add(bookFromFile);
+                    Book b = (Book) obj.readObject();
+                    booksFromFile.add(b);
                 } else {
                     hasNext = false;
                 }
             }
+            
+            obj.close();
+            fis.close();
+            return booksFromFile;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(BookManagement.class.getName()).log(Level.SEVERE, null, ex);
+
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(BookManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return booksFromFile;
+        return null;
     }
-    
+
     public static void printFile() {
-        for (Book b: books) {
+        for (Book b : books) {
             System.out.println(b);
         }
         BookManagement.menu();
     }
-    
+
 }
