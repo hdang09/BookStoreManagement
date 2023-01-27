@@ -7,10 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.IDN;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -47,64 +45,11 @@ public class PublisherManagement {
 
     }
 
-    public static boolean validate(String ID, String name, String phone) {
-
-        return true;
-    }
-
     public static void create() {
-        boolean wrong;
-        String idRegex = "[P]{1}\\d{5}";
-        String nameRegex = ".{5,30}";
-        String phoneRegex = "\\d{10,12}";
-
-        // Validate ID
-        do {
-            System.out.println("Publisher's ID: ");
-            String id = sc.next();
-            for (Publisher pub : publisherList) {
-                if (pub.getId().equals(id)) {
-                    System.out.println("Publisher’s id is not allowed to duplicate");
-                    wrong = true;
-//                    break;
-                }
-            }
-            if (Pattern.matches(idRegex, id)) {
-                wrong = false;
-                publisher.setId(id);
-            } else {
-                wrong = true;
-                System.out.println("Publisher’s Id has pattern “Pxxxxx”, with xxxxx is five digits");
-            }
-
-        } while (wrong);
-
-        // Validate name
-        do {
-            System.out.println("Publisher's name: ");
-            String name = sc.next();
-            if (Pattern.matches(nameRegex, name)) {
-                wrong = false;
-                publisher.setName(name);
-            } else {
-                System.out.println("Publisher’s Name is a string and has a length from 5 to 30 characters.");
-                wrong = true;
-            }
-        } while (wrong);
-
-        // Validate phone
-        do {
-            System.out.println("Publisher's phone: ");
-            String phone = sc.next();
-            if (!Pattern.matches(phoneRegex, phone)) {
-                wrong = false;
-                publisher.setPhone(phone);
-            } else {
-                wrong = true;
-                System.out.println("The phone is a number string that has a length from 10 to 12");
-
-            }
-        } while (wrong);
+        String id = new Input().publisherId("Publisher's ID: ");
+        String name = new Input().publisherName("Publisher's name: ");
+        String phone = new Input().publisherPhone("Publisher's phone: ");
+        publisher = new Publisher(id, name, phone);
 
         PublisherManagement.menu();
     }

@@ -1,14 +1,25 @@
 package bookstoremanagement;
 
-public class Book {
-    private int id;
+import java.io.Serializable;
+
+public class Book implements Serializable {
+    private String id;
     private String name;
     private long price;
-    public int quantity;
-    private int publisherId;
+    private int quantity;
+    private String publisherId;
     private String status;
+    
+    public Book() {
+        this.id = "";
+        this.name = "";
+        this.price = 0;
+        this.quantity = 0;
+        this.publisherId = "";
+        this.status = "";
+    }
 
-    public Book(int id, String name, long price, int quantity, int publisherId, String status) {
+    public Book(String id, String name, long price, int quantity, String publisherId, String status) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -17,11 +28,11 @@ public class Book {
         this.status = status;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -49,11 +60,11 @@ public class Book {
         this.quantity = quantity;
     }
 
-    public int getPublisherId() {
+    public String getPublisherId() {
         return publisherId;
     }
 
-    public void setPublisherId(int publisherId) {
+    public void setPublisherId(String publisherId) {
         this.publisherId = publisherId;
     }
 
