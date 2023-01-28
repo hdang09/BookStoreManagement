@@ -24,4 +24,3 @@ public class Main {
 }
 
 // ASC Publisher list
-// File don't have anything

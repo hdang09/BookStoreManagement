@@ -1,5 +1,6 @@
 package bookstoremanagement;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,12 +14,10 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 public class PublisherManagement {
-
     public static Scanner sc = new Scanner(System.in);
-    public static String filePath = "src\\Publisher.dat";
+    public static String filePath = "src\\data\\Publisher.dat";
     public static List<Publisher> publisherList = PublisherManagement.readFile();
     private static Publisher publisher = new Publisher();
 
@@ -55,24 +54,16 @@ public class PublisherManagement {
     }
 
     public static void delete() {
-        System.out.println("Enter publisher's ID: ");
-        String id = sc.next();
+        int deleteIndex = new Input().findPublisherIndexByID("Enter publisher's ID: ");
 
-        boolean isDelete = false;
-        for (Publisher pub : publisherList) {
-            if (pub.getId().equals(id)) {
-                isDelete = publisherList.remove(pub);
-            }
-        }
-
-        if (isDelete) {
+        if (deleteIndex != -1) {
+            publisherList.remove(deleteIndex);
             System.out.println("Delete succesfully");
         } else {
             System.out.println("Publisher’s Id does not exist");
         }
 
         PublisherManagement.saveToFile();
-        PublisherManagement.menu();
     }
 
     public static void saveToFile() {
@@ -85,11 +76,14 @@ public class PublisherManagement {
                 obj.writeObject(pu);
             }
 
-            obj.writeObject(publisher);
-            publisherList.add(publisher);
+            if (!publisher.getId().isBlank()) {
+                obj.writeObject(publisher);
+                publisherList.add(publisher);
+            }
             System.out.println("Write to file successfully");
-            fos.close();
+            publisher = new Publisher();
             obj.close();
+            fos.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PublisherManagement.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -108,9 +102,9 @@ public class PublisherManagement {
                 Logger.getLogger(PublisherManagement.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        try {
-            FileInputStream fis = new FileInputStream(filePath);
+        try (FileInputStream fis = new FileInputStream(filePath)) {
             try (ObjectInputStream obj = new ObjectInputStream(fis)) {
+                System.out.println("c");
                 boolean hasNext = true;
                 while (hasNext) {
                     if (fis.available() != 0) {
@@ -120,6 +114,8 @@ public class PublisherManagement {
                         hasNext = false;
                     }
                 }
+            } catch (EOFException e) {
+                return list;
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PublisherManagement.class.getName()).log(Level.SEVERE, null, ex);
@@ -132,8 +128,12 @@ public class PublisherManagement {
     }
 
     public static void printFromFile() {
-        Collections.sort(publisherList);
-        publisherList.forEach(System.out::println);
+        if (publisherList.isEmpty()) {
+            System.out.println("The list is empty!");
+        } else {
+            Collections.sort(publisherList);
+            publisherList.forEach(System.out::println);
+        }
         PublisherManagement.menu();
     }
 }

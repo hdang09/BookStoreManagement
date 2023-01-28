@@ -1,5 +1,6 @@
 package bookstoremanagement;
 
+import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,16 +9,16 @@ import java.io.ObjectInputStream;
 import java.io.File;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 public class BookManagement {
 
     static Scanner sc = new Scanner(System.in);
-    public static String filePath = "src\\Book.dat";
+    public static String filePath = "src\\data\\Book.dat";
     public static List<Book> books = BookManagement.readFIle();
     static Book book = new Book();
 
@@ -50,99 +51,14 @@ public class BookManagement {
     }
 
     public static void create() {
-        boolean wrong;
-        String idRegex = "[B]{1}\\d{5}";
-        String nameRegex = ".{5,30}";
+        String id = new Input().bookId("Input book's ID: ");
+        String name = new Input().bookName("Input book's name: ");
+        Double price = new Input().bookPrice("Input book's price: ");
+        int quantity = new Input().bookQuantity("Input book's quantity: ");
+        String status = new Input().bookStatus("Input book's status (Available/ Not Available): ");
+        String publisherId = new Input().findPublisherId("Input publisher's ID: ");
 
-        // Validate ID
-        do {
-            System.out.print("Input book's ID: ");
-            String id = sc.next();
-            for (Book book : books) {
-                if (book.getId().equals(id)) {
-                    System.out.println("Publisher’s id is not allowed to duplicate");
-                    wrong = true;
-                    // break;
-                }
-            }
-            if (Pattern.matches(idRegex, id)) {
-                wrong = false;
-                book.setId(id);
-            } else {
-                wrong = true;
-                System.err.println("Publisher’s Id has pattern “Pxxxxx”, with xxxxx is five digits");
-            }
-
-        } while (wrong);
-
-        // Validate name
-        do {
-            System.out.print("Input book's name: ");
-            String name = sc.next();
-            if (Pattern.matches(nameRegex, name)) {
-                wrong = false;
-                book.setName(name);
-            } else {
-                System.err.println("Publisher’s Name is a string and has a length from 5 to 30 characters.");
-                wrong = true;
-            }
-        } while (wrong);
-
-        // Validate price
-        do {
-            System.out.print("Input book's price: ");
-            long price = sc.nextLong();
-            wrong = price <= 0;
-            if (wrong) {
-                System.err.println("Book’s Price is a real number and greater than 0");
-            } else {
-                book.setPrice(price);
-            }
-        } while (wrong);
-
-        // Validate quantity
-        do {
-            System.out.print("Input book's quantity: ");
-            int quantity = sc.nextInt();
-            wrong = quantity <= 0;
-            if (wrong) {
-                System.err.println("Book’s Quantity is an integer number and greater than 0.");
-            } else {
-                book.setQuantity(quantity);
-            }
-        } while (wrong);
-
-        // Validate status
-        do {
-            System.out.print("Input book's status (Available/ Not Available): ");
-            String status = sc.next();
-            wrong = !status.equals("Available") && !status.equals("Available");
-            if (wrong) {
-                System.err.println("Status is a string and has values: Available or Not Available values");
-            } else {
-                book.setStatus(status);
-            }
-        } while (wrong);
-
-        // Validate publisher's ID
-        do {
-            wrong = true;
-            System.out.print("Input publisher's ID: ");
-            String publisherId = sc.next();
-            List<Publisher> publisherList = PublisherManagement.readFile();
-            for (Publisher publisher : publisherList) {
-                if (publisher.getId().equals(publisherId)) {
-                    wrong = false;
-                    break;
-                }
-            }
-            if (wrong) {
-                System.err.println("Publisher’s Id is not found");
-            } else {
-                book.setPublisherId(publisherId);
-            }
-        } while (wrong);
-        
+        book = new Book(id, name, price, quantity, publisherId, status);
         BookManagement.menu();
     }
 
@@ -160,7 +76,7 @@ public class BookManagement {
             }
         }
         if (!isFound) {
-            System.out.println("Have no any Book");
+            System.err.println("Have no any Book");
         }
         BookManagement.menu();
     }
@@ -172,59 +88,49 @@ public class BookManagement {
         boolean isFound = false;
         for (int i = 0; i < books.size(); i++) {
             if (books.get(i).getId().equals(bookID)) {
-                System.out.print("Input book's ID: ");
-                String id = sc.next();
-                System.out.print("Input book's name: ");
-                String name = sc.next();
-                System.out.print("Input book's price: ");
-                long price = sc.nextLong();
-                System.out.print("Input book's quantity: ");
-                int quantity = sc.nextInt();
-                System.out.print("Input book's status (Available/ Not Available): ");
-                String status = sc.next();
-                System.out.print("Input publisher's ID: ");
-                String publisherId = sc.next();
-                Book newBook = new Book(id, name, price, quantity, publisherId, status);
-                books.set(i, newBook);
+                String id = new Input().bookId("Input book's ID you want to change: ");
+                String name = new Input().bookName("Input book's name: ");
+                Double price = new Input().bookPrice("Input book's price: ");
+                int quantity = new Input().bookQuantity("Input book's quantity: ");
+                String status = new Input().bookStatus("Input book's status (Available/ Not Available): ");
+                String publisherId = new Input().findPublisherId("Input publisher's ID: ");
+
+                book = new Book(id, name, price, quantity, publisherId, status);
+                books.set(i, book);
                 isFound = true;
                 break;
             }
         }
         if (!isFound) {
-            System.out.println("Book’s Name does not exist");
+            System.err.println("Book’s Name does not exist");
         }
         BookManagement.menu();
     }
 
     public static void delete() {
-        System.out.print("Enter book's ID: ");
-        String bookID = sc.next();
+        int bookIndex = new Input().findBookIndexById("Enter book's ID: ");
 
-        boolean isFound = false;
-        for (int i = 0; i < books.size(); i++) {
-            if (books.get(i).getId().equals(bookID)) {
-                books.remove(i);
-                isFound = true;
-                System.out.println("Deleted successfully");
-            }
-        }
-        if (!isFound) {
-            System.out.println("Have no any Book");
+        if (bookIndex != -1) {
+            books.remove(bookIndex);
+            System.out.println("Deleted successfully");
+        } else {
+            System.err.println("Have no any Book");
         }
         BookManagement.menu();
     }
 
     public static void saveToFile() {
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
-            ObjectOutputStream obj = new ObjectOutputStream(fos);
-            for (Book b: books) {
-                obj.writeObject(b);
+            try (ObjectOutputStream obj = new ObjectOutputStream(fos)) {
+                for (Book b : books) {
+                    obj.writeObject(b);
+                }
+                obj.writeObject(book);
+                books.add(book);
+                System.out.println("Save to file successfuly");
+                fos.close();
+                obj.close();
             }
-            obj.writeObject(book);
-            books.add(book);
-            System.out.println("Save to file successfuly");
-            fos.close();
-            obj.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PublisherManagement.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -256,6 +162,8 @@ public class BookManagement {
                     }
                 }
                 obj.close();
+            } catch (EOFException e) {
+                return booksFromFile;
             }
             fis.close();
         } catch (FileNotFoundException ex) {
@@ -269,7 +177,12 @@ public class BookManagement {
     }
 
     public static void printFile() {
-        books.forEach(System.out::println);
+        if (books.isEmpty()) {
+            System.err.println("The list is empty!");
+        } else {
+            Collections.sort(books);
+            books.forEach(System.out::println);
+        }
         BookManagement.menu();
     }
 
