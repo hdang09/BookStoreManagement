@@ -3,6 +3,7 @@ package bookstoremanagement;
 import java.io.Serializable;
 
 public class Publisher implements Serializable, Comparable<Publisher> {
+    public static final long serialVersionUID = -3040096452457271695L;
     private String id;
     private String name;
     private String phone;

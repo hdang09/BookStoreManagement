@@ -28,6 +28,7 @@ public class PublisherManagement {
         System.out.println("1.4. Print the Publisher list from the file");
         System.out.println("Others. Go back to main menu");
 
+        System.out.print("Your choice: ");
         int choice = sc.nextInt();
         switch (choice) {
             case 1 ->
@@ -45,9 +46,11 @@ public class PublisherManagement {
     }
 
     public static void create() {
-        String id = new Input().publisherId("Publisher's ID: ");
-        String name = new Input().publisherName("Publisher's name: ");
-        String phone = new Input().publisherPhone("Publisher's phone: ");
+        Input input = new Input();
+        
+        String id = input.publisherId("Publisher's ID: ");
+        String name = input.publisherName("Publisher's name: ");
+        String phone = input.publisherPhone("Publisher's phone: ");
         publisher = new Publisher(id, name, phone);
 
         PublisherManagement.menu();
@@ -59,16 +62,16 @@ public class PublisherManagement {
         if (deleteIndex != -1) {
             publisherList.remove(deleteIndex);
             System.out.println("Delete succesfully");
+            PublisherManagement.saveToFile();
         } else {
-            System.out.println("Publisher’s Id does not exist");
+            System.err.println("Publisher’s Id does not exist");
+            PublisherManagement.menu();
         }
 
-        PublisherManagement.saveToFile();
+        
     }
 
     public static void saveToFile() {
-        System.out.println(publisher);
-
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             ObjectOutputStream obj = new ObjectOutputStream(fos);
 
@@ -104,7 +107,6 @@ public class PublisherManagement {
         }
         try (FileInputStream fis = new FileInputStream(filePath)) {
             try (ObjectInputStream obj = new ObjectInputStream(fis)) {
-                System.out.println("c");
                 boolean hasNext = true;
                 while (hasNext) {
                     if (fis.available() != 0) {

@@ -31,6 +31,7 @@ public class BookManagement {
         System.out.println("2.6. Print the Books list from the file");
         System.out.println("Others. Go back to main menu");
 
+        System.out.print("Your choice: ");
         int choice = sc.nextInt();
         switch (choice) {
             case 1 ->
@@ -51,22 +52,23 @@ public class BookManagement {
     }
 
     public static void create() {
-        String id = new Input().bookId("Input book's ID: ");
-        String name = new Input().bookName("Input book's name: ");
-        Double price = new Input().bookPrice("Input book's price: ");
-        int quantity = new Input().bookQuantity("Input book's quantity: ");
-        String status = new Input().bookStatus("Input book's status (Available/ Not Available): ");
-        String publisherId = new Input().findPublisherId("Input publisher's ID: ");
+        Input input = new Input();
+
+        String id = input.bookId("Input book's ID: ");
+        String name = input.bookName("Input book's name: ");
+        Double price = input.bookPrice("Input book's price: ");
+        int quantity = input.bookQuantity("Input book's quantity: ");
+        String status = input.bookStatus("Input book's status (Available/ Not Available): ");
+        String publisherId = input.findPublisherId("Input publisher's ID: ");
 
         book = new Book(id, name, price, quantity, publisherId, status);
         BookManagement.menu();
     }
 
     public static void search() {
-        System.out.print("Input book's name: ");
-        String name = sc.next();
-        System.out.print("Input publisher's ID: ");
-        String publisherId = sc.next();
+        Input input = new Input();
+        String name = input.bookName("Input book's name: ");
+        String publisherId = input.findPublisherId("Input publisher's ID: ");
 
         boolean isFound = false;
         for (Book b : books) {
@@ -82,22 +84,24 @@ public class BookManagement {
     }
 
     public static void update() {
-        System.out.print("Input book's ID you want to update: ");
-        String bookID = sc.next();
+        Input input = new Input();
+        String bookID = input.findBookId("Input book's ID you want to update: ");
 
         boolean isFound = false;
         for (int i = 0; i < books.size(); i++) {
             if (books.get(i).getId().equals(bookID)) {
-                String id = new Input().bookId("Input book's ID you want to change: ");
-                String name = new Input().bookName("Input book's name: ");
-                Double price = new Input().bookPrice("Input book's price: ");
-                int quantity = new Input().bookQuantity("Input book's quantity: ");
-                String status = new Input().bookStatus("Input book's status (Available/ Not Available): ");
-                String publisherId = new Input().findPublisherId("Input publisher's ID: ");
+                String id = input.bookId("Input book's ID you want to change: ");
+                String name = input.bookName("Input book's name: ");
+                Double price = input.bookPrice("Input book's price: ");
+                int quantity = input.bookQuantity("Input book's quantity: ");
+                String status = input.bookStatus("Input book's status (Available/ Not Available): ");
+                String publisherId = input.findPublisherId("Input publisher's ID: ");
 
+                isFound = true;
                 book = new Book(id, name, price, quantity, publisherId, status);
                 books.set(i, book);
-                isFound = true;
+                book = new Book();
+                BookManagement.saveToFile();
                 break;
             }
         }
@@ -113,10 +117,11 @@ public class BookManagement {
         if (bookIndex != -1) {
             books.remove(bookIndex);
             System.out.println("Deleted successfully");
+            BookManagement.saveToFile();
         } else {
             System.err.println("Have no any Book");
+            BookManagement.menu();
         }
-        BookManagement.menu();
     }
 
     public static void saveToFile() {
@@ -125,9 +130,12 @@ public class BookManagement {
                 for (Book b : books) {
                     obj.writeObject(b);
                 }
-                obj.writeObject(book);
-                books.add(book);
-                System.out.println("Save to file successfuly");
+                if (!book.getId().isBlank()) {
+                    obj.writeObject(book);
+                    books.add(book);
+                }
+                System.out.println("Write to file successfuly");
+                book = new Book();
                 fos.close();
                 obj.close();
             }
