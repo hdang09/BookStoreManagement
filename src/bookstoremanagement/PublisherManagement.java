@@ -22,14 +22,18 @@ public class PublisherManagement {
     private static Publisher publisher = new Publisher();
 
     public static void menu() {
-        System.out.println("1.1. Create a Publisher");
-        System.out.println("1.2. Delete the Publisher");
-        System.out.println("1.3. Save the Publishers list to file");
-        System.out.println("1.4. Print the Publisher list from the file");
-        System.out.println("Others. Go back to main menu");
+        System.out.println();
+        System.out.println("----------- BOOK STORE MANAGEMENT -----------");
+        System.out.println("| 1. Create a Publisher                     |");
+        System.out.println("| 2. Delete the Publisher                   |");
+        System.out.println("| 3. Save the Publishers list to file       |");
+        System.out.println("| 4. Print the Publisher list from the file |");
+        System.out.println("| Others. Go back to main menu              |");
+        System.out.println("---------------------------------------------");
 
         System.out.print("Your choice: ");
         int choice = sc.nextInt();
+        System.out.println();
         switch (choice) {
             case 1 ->
                 PublisherManagement.create();
@@ -47,13 +51,13 @@ public class PublisherManagement {
 
     public static void create() {
         Input input = new Input();
-        
+
         String id = input.publisherId("Publisher's ID: ");
         String name = input.publisherName("Publisher's name: ");
         String phone = input.publisherPhone("Publisher's phone: ");
         publisher = new Publisher(id, name, phone);
 
-        PublisherManagement.menu();
+        input.menu("publisher");
     }
 
     public static void delete() {
@@ -64,35 +68,35 @@ public class PublisherManagement {
             System.out.println("Delete succesfully");
             PublisherManagement.saveToFile();
         } else {
-            System.err.println("Publisher’s Id does not exist");
-            PublisherManagement.menu();
+            System.err.println("Publisher's Id does not exist");
+            new Input().menu("publisher");
         }
 
-        
     }
 
     public static void saveToFile() {
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
-            ObjectOutputStream obj = new ObjectOutputStream(fos);
+            try (ObjectOutputStream obj = new ObjectOutputStream(fos)) {
+                for (Publisher pu : publisherList) {
+                    obj.writeObject(pu);
+                }
 
-            for (Publisher pu : publisherList) {
-                obj.writeObject(pu);
+                if (!publisher.getId().isBlank()) {
+                    obj.writeObject(publisher);
+                    publisherList.add(publisher);
+                }
+                System.out.println("Write to file successfully");
+                publisher = new Publisher();
+                obj.close();
             }
 
-            if (!publisher.getId().isBlank()) {
-                obj.writeObject(publisher);
-                publisherList.add(publisher);
-            }
-            System.out.println("Write to file successfully");
-            publisher = new Publisher();
-            obj.close();
             fos.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PublisherManagement.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(PublisherManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
-        PublisherManagement.menu();
+        new Input().menu("publisher");
     }
 
     public static List<Publisher> readFile() {
@@ -134,8 +138,12 @@ public class PublisherManagement {
             System.out.println("The list is empty!");
         } else {
             Collections.sort(publisherList);
+            System.out.println("---------------------------------------------------------------");
+            System.out.println("| PublisherID |              Name              |     Phone    |");
+            System.out.println("|-------------|--------------------------------|--------------|");
             publisherList.forEach(System.out::println);
+            System.out.println("---------------------------------------------------------------");
         }
-        PublisherManagement.menu();
+        new Input().menu("publisher");
     }
 }

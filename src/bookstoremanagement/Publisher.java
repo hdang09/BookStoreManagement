@@ -46,7 +46,9 @@ public class Publisher implements Serializable, Comparable<Publisher> {
 
     @Override
     public String toString() {
-        return "Publisher{" + "id=" + id + ", name=" + name + ", phone=" + phone + '}';
+        String formatedName = String.format("%-30s", name);
+        String formatedPhone = String.format("%-12s", phone);
+        return "|    " + id + "   | " + formatedName + " | " + formatedPhone + " |";
     }
 
     @Override

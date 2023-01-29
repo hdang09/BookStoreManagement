@@ -23,16 +23,20 @@ public class BookManagement {
     static Book book = new Book();
 
     public static void menu() {
-        System.out.println("2.1. Create a Book");
-        System.out.println("2.2. Search the Book");
-        System.out.println("2.3. Update a Book");
-        System.out.println("2.4. Delete the Book");
-        System.out.println("2.5. Save the Books list to file.");
-        System.out.println("2.6. Print the Books list from the file");
-        System.out.println("Others. Go back to main menu");
+        System.out.println();
+        System.out.println("--------- BOOK STORE MANAGEMENT --------");
+        System.out.println("| 1. Create a Book                      |");
+        System.out.println("| 2. Search the Book                    |");
+        System.out.println("| 3. Update a Book                      |");
+        System.out.println("| 4. Delete the Book                    |");
+        System.out.println("| 5. Save the Books list to file.       |");
+        System.out.println("| 6. Print the Books list from the file |");
+        System.out.println("| Others. Go back to main menu          |");
+        System.out.println("-----------------------------------------");
 
         System.out.print("Your choice: ");
         int choice = sc.nextInt();
+        System.out.println();
         switch (choice) {
             case 1 ->
                 BookManagement.create();
@@ -62,7 +66,7 @@ public class BookManagement {
         String publisherId = input.findPublisherId("Input publisher's ID: ");
 
         book = new Book(id, name, price, quantity, publisherId, status);
-        BookManagement.menu();
+        input.menu("book");
     }
 
     public static void search() {
@@ -80,7 +84,7 @@ public class BookManagement {
         if (!isFound) {
             System.err.println("Have no any Book");
         }
-        BookManagement.menu();
+        input.menu("book");
     }
 
     public static void update() {
@@ -106,9 +110,9 @@ public class BookManagement {
             }
         }
         if (!isFound) {
-            System.err.println("Book’s Name does not exist");
+            System.err.println("Book's Name does not exist");
         }
-        BookManagement.menu();
+        input.menu("book");
     }
 
     public static void delete() {
@@ -122,6 +126,7 @@ public class BookManagement {
             System.err.println("Have no any Book");
             BookManagement.menu();
         }
+        new Input().menu("book");
     }
 
     public static void saveToFile() {
@@ -144,7 +149,7 @@ public class BookManagement {
         } catch (IOException ex) {
             Logger.getLogger(PublisherManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
-        BookManagement.menu();
+        new Input().menu("book");
     }
 
     public static List<Book> readFIle() {
@@ -189,9 +194,13 @@ public class BookManagement {
             System.err.println("The list is empty!");
         } else {
             Collections.sort(books);
+            System.out.println("----------------------------------------------------------------------------------------------------------------");
+            System.out.println("| BookID |              Name              |    Price   |  Quantity  |   Subtotal | PublisherID |     Status    |");
+            System.out.println("|--------|--------------------------------|------------|------------|------------|-------------|---------------|");
             books.forEach(System.out::println);
+            System.out.println("----------------------------------------------------------------------------------------------------------------");
         }
-        BookManagement.menu();
+        new Input().menu("book");
     }
 
 }

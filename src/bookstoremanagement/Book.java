@@ -3,6 +3,7 @@ package bookstoremanagement;
 import java.io.Serializable;
 
 public class Book implements Serializable, Comparable<Book> {
+
     public static final long serialVersionUID = -3040096452457271695L;
     private String id;
     private String name;
@@ -10,7 +11,7 @@ public class Book implements Serializable, Comparable<Book> {
     private int quantity;
     private String publisherId;
     private String status;
-    
+
     public Book() {
         this.id = "";
         this.name = "";
@@ -79,12 +80,18 @@ public class Book implements Serializable, Comparable<Book> {
 
     @Override
     public String toString() {
-        return "Book{" + "id=" + id + ", name=" + name + ", price=" + price + ", quantity=" + quantity + ", publisherId=" + publisherId + ", status=" + status + '}';
+        String formattedName = String.format("%-30s", name);
+        String formattedPrice = String.format("%-10.2f", price);
+        String formattedQuantity = String.format("%-10d", quantity);
+        String formattedStatus = String.format("%-13s", status);
+        Double subtotal = price * quantity;
+        String formattedSubtotal = String.format("%-10.2f", subtotal);
+        return "| " + id + " | " + formattedName + " | " + formattedPrice + " | " + formattedQuantity + " | " + formattedSubtotal + " |    " + publisherId + "   | " + formattedStatus + " |";
     }
 
     @Override
     public int compareTo(Book o) {
         return price.compareTo(o.getPrice());
     }
-    
+
 }

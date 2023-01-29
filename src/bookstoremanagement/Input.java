@@ -4,6 +4,7 @@
  */
 package bookstoremanagement;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -56,7 +57,9 @@ public class Input {
                         return id;
                     }
                 }
-                System.err.println("Publisher’s Id is not found");
+                System.err.println("Publisher’s Id is not found: ");
+                publisherList.forEach(p -> System.out.print(p.getId() + " "));
+                System.out.println();
             } else {
                 System.err.println("Publisher’s Id has pattern “Pxxxxx”, with xxxxx is five digits");
             }
@@ -148,7 +151,7 @@ public class Input {
 
         return "";
     }
-    
+
     public String findBookId(String message) {
         List<Book> books = BookManagement.readFIle();
         do {
@@ -162,7 +165,9 @@ public class Input {
                         return id;
                     }
                 }
-                System.err.println("Book’s Id is not found");
+                System.err.println("Book’s Id is not found: ");
+                books.forEach(b -> System.out.print(b.getId() + " "));
+                System.out.println();
             } else {
                 System.err.println("Book’s Id has pattern “Pxxxxx”, with xxxxx is five digits");
             }
@@ -258,21 +263,31 @@ public class Input {
         return "";
     }
 
-    public void publisherMenu() {
-        
-    }
-
-    public void bookMenu() {
-        
-    }
-
-    public void mainMenu() {
+    public void menu(String menuType) {
+        System.out.println("Do you want to go back to menu?");
         do {
             wrong = false;
-            System.out.println("Do you want to go back to main menu?");
-            System.out.print("Your choice: ");
-            int choice = sc.nextInt();
-            wrong = choice != 1 && choice != 2;
+            System.out.print("Your choice (Y/N): ");
+            String choice = sc.next().toUpperCase();
+            wrong = !choice.equals("Y") && !choice.equals("N");
+            if (wrong) {
+                System.err.println("Please input again!");
+            } else {
+                if (choice.equals("Y")) {
+                    switch (menuType) {
+                        case "publisher" ->
+                            PublisherManagement.menu();
+                        case "book" ->
+                            BookManagement.menu();
+                        case "main" ->
+                            Main.menu();
+                        default -> {
+                        }
+                    }
+                } else {
+                    return;
+                }
+            }
         } while (wrong);
     }
 }
