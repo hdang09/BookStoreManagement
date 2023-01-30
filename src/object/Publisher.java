@@ -1,4 +1,4 @@
-package bookstoremanagement;
+package object;
 
 import java.io.Serializable;
 
@@ -55,6 +55,4 @@ public class Publisher implements Serializable, Comparable<Publisher> {
     public int compareTo(Publisher o) {
         return this.name.compareTo(o.getName());
     }
-    
-    
 }

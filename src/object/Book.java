@@ -1,4 +1,4 @@
-package bookstoremanagement;
+package object;
 
 import java.io.Serializable;
 

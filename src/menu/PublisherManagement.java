@@ -1,5 +1,7 @@
-package bookstoremanagement;
+package menu;
 
+import validate.Input;
+import object.Publisher;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -114,7 +116,7 @@ public class PublisherManagement {
                 boolean hasNext = true;
                 while (hasNext) {
                     if (fis.available() != 0) {
-                        Publisher pu = (Publisher) obj.readObject();
+                        object.Publisher pu = (object.Publisher) obj.readObject();
                         list.add(pu);
                     } else {
                         hasNext = false;
@@ -135,7 +137,7 @@ public class PublisherManagement {
 
     public static void printFromFile() {
         if (publisherList.isEmpty()) {
-            System.out.println("The list is empty!");
+            System.err.println("The list is empty!");
         } else {
             Collections.sort(publisherList);
             System.out.println("---------------------------------------------------------------");

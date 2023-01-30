@@ -2,9 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package bookstoremanagement;
+package validate;
 
-import java.io.IOException;
+import object.Book;
+import menu.BookManagement;
+import menu.Main;
+import object.Publisher;
+import menu.PublisherManagement;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -34,7 +38,7 @@ public class Input {
                 }
             } else {
                 wrong = true;
-                System.err.println("Publisher’s Id has pattern “Pxxxxx”, with xxxxx is five digits");
+                System.err.println("Publisher’s Id has pattern 'Pxxxxx', with xxxxx is five digits");
             }
 
             if (!wrong) {
@@ -61,7 +65,7 @@ public class Input {
                 publisherList.forEach(p -> System.out.print(p.getId() + " "));
                 System.out.println();
             } else {
-                System.err.println("Publisher’s Id has pattern “Pxxxxx”, with xxxxx is five digits");
+                System.err.println("Publisher’s Id has pattern 'Pxxxxx', with xxxxx is five digits");
             }
 
         } while (wrong);
@@ -84,7 +88,7 @@ public class Input {
                 }
             } else {
                 wrong = true;
-                System.err.println("Publisher’s Id has pattern “Pxxxxx”, with xxxxx is five digits");
+                System.err.println("Publisher’s Id has pattern 'Pxxxxx', with xxxxx is five digits");
             }
         } while (wrong);
 
@@ -141,7 +145,7 @@ public class Input {
                 }
             } else {
                 wrong = true;
-                System.err.println("Book’s Id has pattern “Bxxxxx”, with xxxxx is five digits");
+                System.err.println("Book’s Id has pattern 'Bxxxxx', with xxxxx is five digits");
             }
 
             if (!wrong) {
@@ -169,7 +173,7 @@ public class Input {
                 books.forEach(b -> System.out.print(b.getId() + " "));
                 System.out.println();
             } else {
-                System.err.println("Book’s Id has pattern “Pxxxxx”, with xxxxx is five digits");
+                System.err.println("Book’s Id has pattern 'Bxxxxx', with xxxxx is five digits");
             }
 
         } while (wrong);
@@ -192,7 +196,7 @@ public class Input {
                 }
             } else {
                 wrong = true;
-                System.err.println("Book’s Id has pattern “Bxxxxx”, with xxxxx is five digits");
+                System.err.println("Book’s Id has pattern 'Bxxxxx', with xxxxx is five digits");
             }
         } while (wrong);
 

@@ -1,4 +1,4 @@
-package bookstoremanagement;
+package menu;
 
 import java.util.Scanner;
 
@@ -34,3 +34,5 @@ public class Main {
 // sc choice (optional)
 // clear screen / add space top bottom menu
 // Not async with file
+// Input string cannot contain space
+// Error when delete in publisher

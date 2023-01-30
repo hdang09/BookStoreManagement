@@ -1,5 +1,7 @@
-package bookstoremanagement;
+package menu;
 
+import object.Book;
+import validate.Input;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,6 +23,7 @@ public class BookManagement {
     public static String filePath = "src\\data\\Book.dat";
     public static List<Book> books = BookManagement.readFIle();
     static Book book = new Book();
+    static Input input = new Input();
 
     public static void menu() {
         System.out.println();
@@ -56,8 +59,6 @@ public class BookManagement {
     }
 
     public static void create() {
-        Input input = new Input();
-
         String id = input.bookId("Input book's ID: ");
         String name = input.bookName("Input book's name: ");
         Double price = input.bookPrice("Input book's price: ");
@@ -70,7 +71,6 @@ public class BookManagement {
     }
 
     public static void search() {
-        Input input = new Input();
         String name = input.bookName("Input book's name: ");
         String publisherId = input.findPublisherId("Input publisher's ID: ");
 
@@ -88,7 +88,6 @@ public class BookManagement {
     }
 
     public static void update() {
-        Input input = new Input();
         String bookID = input.findBookId("Input book's ID you want to update: ");
 
         boolean isFound = false;
@@ -126,7 +125,7 @@ public class BookManagement {
             System.err.println("Have no any Book");
             BookManagement.menu();
         }
-        new Input().menu("book");
+        input.menu("book");
     }
 
     public static void saveToFile() {
@@ -149,7 +148,7 @@ public class BookManagement {
         } catch (IOException ex) {
             Logger.getLogger(PublisherManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
-        new Input().menu("book");
+        input.menu("book");
     }
 
     public static List<Book> readFIle() {
@@ -200,7 +199,7 @@ public class BookManagement {
             books.forEach(System.out::println);
             System.out.println("----------------------------------------------------------------------------------------------------------------");
         }
-        new Input().menu("book");
+        input.menu("book");
     }
 
 }
