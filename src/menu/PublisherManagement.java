@@ -13,15 +13,14 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PublisherManagement {
-    public static Scanner sc = new Scanner(System.in);
-    public static String filePath = "src\\data\\Publisher.dat";
-    public static List<Publisher> publisherList = PublisherManagement.readFile();
-    private static Publisher publisher = new Publisher();
+    static String file = "src\\data\\Publisher.dat";
+    static List<Publisher> publisherList = PublisherManagement.readFile();
+    static Publisher publisher = new Publisher();
+    static Input input = new Input();
 
     public static void menu() {
         System.out.println();
@@ -33,8 +32,7 @@ public class PublisherManagement {
         System.out.println("| Others. Go back to main menu              |");
         System.out.println("---------------------------------------------");
 
-        System.out.print("Your choice: ");
-        int choice = sc.nextInt();
+        int choice = input.choice("Your choice: ");
         System.out.println();
         switch (choice) {
             case 1 ->
@@ -48,12 +46,9 @@ public class PublisherManagement {
             default ->
                 Main.menu();
         }
-
     }
 
-    public static void create() {
-        Input input = new Input();
-
+    static void create() {
         String id = input.publisherId("Publisher's ID: ");
         String name = input.publisherName("Publisher's name: ");
         String phone = input.publisherPhone("Publisher's phone: ");
@@ -62,22 +57,24 @@ public class PublisherManagement {
         input.menu("publisher");
     }
 
-    public static void delete() {
+    static void delete() {
         int deleteIndex = new Input().findPublisherIndexByID("Enter publisher's ID: ");
 
         if (deleteIndex != -1) {
+//            System.out.println(deleteIndex);
+//            publisherList.forEach(System.out::println);
             publisherList.remove(deleteIndex);
             System.out.println("Delete succesfully");
+            publisher = new Publisher();
             PublisherManagement.saveToFile();
         } else {
             System.err.println("Publisher's Id does not exist");
-            new Input().menu("publisher");
+            input.menu("publisher");
         }
-
     }
 
-    public static void saveToFile() {
-        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+    static void saveToFile() {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
             try (ObjectOutputStream obj = new ObjectOutputStream(fos)) {
                 for (Publisher pu : publisherList) {
                     obj.writeObject(pu);
@@ -98,12 +95,12 @@ public class PublisherManagement {
         } catch (IOException ex) {
             Logger.getLogger(PublisherManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
-        new Input().menu("publisher");
+        input.menu("publisher");
     }
 
     public static List<Publisher> readFile() {
         List<Publisher> list = new ArrayList<>();
-        File f = new File(filePath);
+        File f = new File(file);
         if (!f.exists()) {
             try {
                 f.createNewFile();
@@ -111,7 +108,7 @@ public class PublisherManagement {
                 Logger.getLogger(PublisherManagement.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        try (FileInputStream fis = new FileInputStream(filePath)) {
+        try (FileInputStream fis = new FileInputStream(file)) {
             try (ObjectInputStream obj = new ObjectInputStream(fis)) {
                 boolean hasNext = true;
                 while (hasNext) {
@@ -135,7 +132,7 @@ public class PublisherManagement {
         return list;
     }
 
-    public static void printFromFile() {
+    static void printFromFile() {
         if (publisherList.isEmpty()) {
             System.err.println("The list is empty!");
         } else {
@@ -146,6 +143,6 @@ public class PublisherManagement {
             publisherList.forEach(System.out::println);
             System.out.println("---------------------------------------------------------------");
         }
-        new Input().menu("publisher");
+        input.menu("publisher");
     }
 }

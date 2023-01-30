@@ -13,15 +13,12 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BookManagement {
-
-    static Scanner sc = new Scanner(System.in);
-    public static String filePath = "src\\data\\Book.dat";
-    public static List<Book> books = BookManagement.readFIle();
+    static String file = "src\\data\\Book.dat";
+    static List<Book> books = BookManagement.readFIle();
     static Book book = new Book();
     static Input input = new Input();
 
@@ -37,8 +34,7 @@ public class BookManagement {
         System.out.println("| Others. Go back to main menu          |");
         System.out.println("-----------------------------------------");
 
-        System.out.print("Your choice: ");
-        int choice = sc.nextInt();
+        int choice = input.choice("Your choice: ");
         System.out.println();
         switch (choice) {
             case 1 ->
@@ -58,7 +54,7 @@ public class BookManagement {
         }
     }
 
-    public static void create() {
+    static void create() {
         String id = input.bookId("Input book's ID: ");
         String name = input.bookName("Input book's name: ");
         Double price = input.bookPrice("Input book's price: ");
@@ -70,7 +66,7 @@ public class BookManagement {
         input.menu("book");
     }
 
-    public static void search() {
+    static void search() {
         String name = input.bookName("Input book's name: ");
         String publisherId = input.findPublisherId("Input publisher's ID: ");
 
@@ -87,7 +83,7 @@ public class BookManagement {
         input.menu("book");
     }
 
-    public static void update() {
+    static void update() {
         String bookID = input.findBookId("Input book's ID you want to update: ");
 
         boolean isFound = false;
@@ -114,12 +110,13 @@ public class BookManagement {
         input.menu("book");
     }
 
-    public static void delete() {
+    static void delete() {
         int bookIndex = new Input().findBookIndexById("Enter book's ID: ");
 
         if (bookIndex != -1) {
             books.remove(bookIndex);
             System.out.println("Deleted successfully");
+            book = new Book();
             BookManagement.saveToFile();
         } else {
             System.err.println("Have no any Book");
@@ -128,8 +125,8 @@ public class BookManagement {
         input.menu("book");
     }
 
-    public static void saveToFile() {
-        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+    static void saveToFile() {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
             try (ObjectOutputStream obj = new ObjectOutputStream(fos)) {
                 for (Book b : books) {
                     obj.writeObject(b);
@@ -153,7 +150,7 @@ public class BookManagement {
 
     public static List<Book> readFIle() {
         List<Book> booksFromFile = new ArrayList<>();
-        File f = new File(filePath);
+        File f = new File(file);
         if (!f.exists()) {
             try {
                 f.createNewFile();
@@ -162,7 +159,7 @@ public class BookManagement {
             }
         }
 
-        try (FileInputStream fis = new FileInputStream(filePath)) {
+        try (FileInputStream fis = new FileInputStream(file)) {
             try (ObjectInputStream obj = new ObjectInputStream(fis)) {
                 boolean hasNext = true;
                 while (hasNext) {
@@ -188,7 +185,7 @@ public class BookManagement {
         return booksFromFile;
     }
 
-    public static void printFile() {
+    static void printFile() {
         if (books.isEmpty()) {
             System.err.println("The list is empty!");
         } else {
@@ -201,5 +198,4 @@ public class BookManagement {
         }
         input.menu("book");
     }
-
 }

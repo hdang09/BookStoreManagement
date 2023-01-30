@@ -1,6 +1,6 @@
 package menu;
 
-import java.util.Scanner;
+import validate.Input;
 
 public class Main {
 
@@ -9,16 +9,15 @@ public class Main {
     }
 
     public static void menu() {
+        Input input = new Input();
+        
         System.out.println("------- BOOK STORE MANAGEMENT -------");
         System.out.println("|     1. Publishers' management     |");
         System.out.println("|       2. Books' management        |");
         System.out.println("|            Other. Quit            |");
         System.out.println("-------------------------------------");
 
-        System.out.print("Your choice: ");
-        Scanner sc = new Scanner(System.in);
-        int choice = sc.nextInt();
-
+        int choice = input.choice("Your choice: ");
         switch (choice) {
             case 1 ->
                 PublisherManagement.menu();
@@ -30,9 +29,7 @@ public class Main {
     }
 }
 
-// Type mismatch
-// sc choice (optional)
-// clear screen / add space top bottom menu
-// Not async with file
-// Input string cannot contain space
-// Error when delete in publisher
+// Type mismatch (try-catch in sc / regex)
+// clear screen
+// Not async with file (sometimes)
+// status (string or boolean)

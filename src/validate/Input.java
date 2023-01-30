@@ -15,11 +15,27 @@ import java.util.regex.Pattern;
 
 public class Input {
 
-    Scanner sc = new Scanner(System.in);
+    Scanner sc = new Scanner(System.in).useDelimiter("\n");
     boolean wrong;
     String publisherIdRegex = "[P]{1}\\d{5}";
     String nameRegex = ".{5,30}";
     String bookIdRegex = "[B]{1}\\d{5}";
+    
+    public int choice(String message) {
+        String choiceRegex = "\\d";
+        do {            
+            wrong = true;
+            System.out.print(message);
+            String choice = sc.next();
+            
+            if (Pattern.matches(choiceRegex, choice)) {
+                return Integer.parseInt(choice);
+            } else {
+                System.err.println("Please input a number!");
+            }
+        } while (wrong);
+        return 0;
+    }
 
     public String publisherId(String message) {
         List<Publisher> publisherList = PublisherManagement.readFile();
@@ -256,7 +272,7 @@ public class Input {
             System.out.print(message);
             String status = sc.next();
 
-            wrong = !status.equals("Available") && !status.equals("Available");
+            wrong = !status.equals("Available") && !status.equals("Not Available");
             if (wrong) {
                 System.err.println("Status is a string and has values: Available or Not Available values");
             } else {

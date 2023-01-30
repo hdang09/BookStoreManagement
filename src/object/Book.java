@@ -91,7 +91,7 @@ public class Book implements Serializable, Comparable<Book> {
 
     @Override
     public int compareTo(Book o) {
-        return price.compareTo(o.getPrice());
+        return o.getPrice().compareTo(price);
     }
 
 }
