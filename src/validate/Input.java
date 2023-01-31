@@ -4,12 +4,9 @@
  */
 package validate;
 
+import java.util.ArrayList;
 import object.Book;
-import menu.BookManagement;
-import menu.Main;
 import object.Publisher;
-import menu.PublisherManagement;
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -37,8 +34,8 @@ public class Input {
         return 0;
     }
 
-    public String publisherId(String message) {
-        List<Publisher> publisherList = PublisherManagement.readFile();
+    public String publisherId(String message, ArrayList<Publisher> publisherList) {
+//        List<Publisher> publisherList = PublisherList.readFile();
         do {
             wrong = false;
             System.out.print(message);
@@ -64,8 +61,7 @@ public class Input {
         return "";
     }
 
-    public String findPublisherId(String message) {
-        List<Publisher> publisherList = PublisherManagement.readFile();
+    public String findPublisherId(String message, ArrayList<Publisher> publisherList) {
         do {
             wrong = true;
             System.out.print(message);
@@ -89,8 +85,7 @@ public class Input {
         return "";
     }
 
-    public int findPublisherIndexByID(String message) {
-        List<Publisher> publisherList = PublisherManagement.readFile();
+    public int findPublisherIndexByID(String message, ArrayList<Publisher> publisherList) {
         do {
             wrong = false;
             System.out.print(message);
@@ -144,8 +139,7 @@ public class Input {
         return "";
     }
 
-    public String bookId(String message) {
-        List<Book> books = BookManagement.readFIle();
+    public String bookId(String message, ArrayList<Book> books) {
         do {
             wrong = false;
             System.out.print(message);
@@ -172,8 +166,7 @@ public class Input {
         return "";
     }
 
-    public String findBookId(String message) {
-        List<Book> books = BookManagement.readFIle();
+    public String findBookId(String message, ArrayList<Book> books) {
         do {
             wrong = true;
             System.out.print(message);
@@ -197,8 +190,7 @@ public class Input {
         return "";
     }
 
-    public int findBookIndexById(String message) {
-        List<Book> books = BookManagement.readFIle();
+    public int findBookIndexById(String message, ArrayList<Book> books) {
         do {
             wrong = false;
             System.out.print(message);
@@ -283,7 +275,7 @@ public class Input {
         return "";
     }
 
-    public void menu(String menuType) {
+    public boolean menu() {
         System.out.println("Do you want to go back to menu?");
         do {
             wrong = false;
@@ -293,21 +285,9 @@ public class Input {
             if (wrong) {
                 System.err.println("Please input again!");
             } else {
-                if (choice.equals("Y")) {
-                    switch (menuType) {
-                        case "publisher" ->
-                            PublisherManagement.menu();
-                        case "book" ->
-                            BookManagement.menu();
-                        case "main" ->
-                            Main.menu();
-                        default -> {
-                        }
-                    }
-                } else {
-                    return;
-                }
+                return choice.equals("Y");
             }
         } while (wrong);
+        return false;
     }
 }
